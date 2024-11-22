@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Qontro.Toolkit.Ui.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+
+            <Grid ColumnDefinitions="Auto,*"
+                  ColumnSpacing="10"
+                  RowDefinitions="*,*,*,*"
+                  RowSpacing="10">
+                
+                <Label Grid.Column="0"
+                       Text="URL for Qontro:"
+                       VerticalOptions="Center"/>
+                <Entry Grid.Column="1"></Entry>
+
+                <Label Grid.Column="0" Grid.Row="1"
+                       Text="User:"
+                       VerticalOptions="Center"/>        
+                <Entry Grid.Column="1" 
+                       Grid.Row="1"></Entry>
+
+                <Label Grid.Column="0" 
+                       Grid.Row="2"
+                       Text="Password:" 
+                       VerticalOptions="Center"/>
+                <Entry Grid.Column="1" 
+                       Grid.Row="2"
+                       IsPassword="True"></Entry>
+
+                <Label Grid.Column="0" 
+                       Grid.Row="3"
+                       Text="Save credentials?"
+                       VerticalOptions="Center"/>
+                <CheckBox Grid.Column="1" Grid.Row="3"></CheckBox>
+            </Grid>
+           
+           
+            <Button
+                Text="Export Creditors" 
+                HorizontalOptions="Fill" />
+            <Button
+                Text="Export Suppliers" 
+                HorizontalOptions="Fill" />
+
+            <Grid ColumnDefinitions="Auto, *"
+                  ColumnSpacing="30"
+                  RowDefinitions="*,*">
+                <Label Grid.Column="0" 
+                       Grid.Row="1"
+                       Text="Progress:" 
+                       VerticalOptions="Start"/>
+                <Label Text="60/100 (60%)"
+                       Grid.Column="1"
+                       HorizontalOptions="Center"/>
+                <ProgressBar  Grid.Column="1"
+                              Grid.Row="1"
+                              Progress="0.6" />
+
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
