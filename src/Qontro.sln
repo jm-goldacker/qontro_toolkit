@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qontro", "Qontro\Qontro.csproj", "{FDEC5DFB-4CC6-4337-8B57-AB0E1BD5E829}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDEC5DFB-4CC6-4337-8B57-AB0E1BD5E829}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDEC5DFB-4CC6-4337-8B57-AB0E1BD5E829}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDEC5DFB-4CC6-4337-8B57-AB0E1BD5E829}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDEC5DFB-4CC6-4337-8B57-AB0E1BD5E829}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E2041192-388B-4DFD-9C79-A9519E27E9BD}
+	EndGlobalSection
+EndGlobal
