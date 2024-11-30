@@ -85,10 +85,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public async Task Login()
     {
         if (string.IsNullOrEmpty(Url) || string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password)) return;
-        _export = new Export(Url, User, Password);
-        _export.RowsCountChanged += (_, e) => ProgressMaximum = e.RowsCount;
-        _export.CurrentProcessingItemChanged += (_, e) => Progress = e.CurrentItem;
-        await Task.Run(_export.Login);
+        _accountProcessor = new AccountProcessor(Url, User, Password);
+        _accountProcessor.RowsCountChanged += (_, e) => ProgressMaximum = e.RowsCount;
+        _accountProcessor.CurrentProcessingItemChanged += (_, e) => Progress = e.CurrentItem;
+        await Task.Run(_accountProcessor.Login);
         
         IsExportPossible = true;
         NeedsLogin = false;
@@ -96,12 +96,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public async Task ExportCreditors()
     {
-        await Task.Run(_export.ExportCreditors);
+        await Task.Run(_accountProcessor.ExportCreditors);
     }
     
     public async Task ExportSuppliers()
     {
-        await Task.Run(_export.ExportSuppliers);
+        await Task.Run(_accountProcessor.ExportSuppliers);
     }
 
     private string _url = "https://www14.qontro.com/";
@@ -110,7 +110,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private int _progress;
     private int _progressMaximum;
 
-    private Export _export;
+    private AccountProcessor _accountProcessor;
     private bool _isExportPossible;
     private bool _needsLogin = true;
 
