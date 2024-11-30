@@ -42,10 +42,9 @@ driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
 Console.WriteLine("Choose an option: [1] - export creditors, [2] - export suppliers");
 var choosedOption = Console.ReadKey();
 
-var headers = new List<string>();
 var exportRows = new List<List<string>>();
+var headers = new List<string>();
 List<string> exportRow;
-var headerInitialized = false;
 
 Login();
 
@@ -79,6 +78,7 @@ void Login()
 void ExportCreditors()
 {
     Console.WriteLine("\nNavigating to creditors...");
+    
     var creditorsMenu = driver.FindElement(By.Id("Creditors"));
     creditorsMenu.Click();
     var enquiryButton = driver.FindElements(By.ClassName("OUTER_MENU_ITEM"))[1];
@@ -94,30 +94,26 @@ void ExportCreditors()
     {
         Console.WriteLine($"\nStarting export of creditor {i + 1} of {rowsCount}. Please wait...");
         exportRow = new List<string>();
-
+        headers = new List<string>();
+        
         var row = driver.FindElements(By.TagName("tr")).Skip(2 + i).First();
         if (row.GetAttribute("class").Contains("footer")) continue;
 
         var columns = row.FindElements(By.TagName("td"));
-
-        if (!headerInitialized)
-        {
-            headers.Add("Last Payment");
-        }
-
+        
+        headers.Add("Last Payment");
         exportRow.Add(columns[2].Text);
 
-        if (!headerInitialized)
-        {
-            headers.Add("Balance Owing");
-        }
-
+        headers.Add("Balance Owing");
         exportRow.Add(columns[8].Text);
 
         var firstColumn = columns.First();
         var link = firstColumn.FindElement(By.TagName("a"));
         link.Click();
 
+        headers.Add("Date And Time");
+        headers.Add("User");
+        
         var changesButton = driver.FindElement(By.Name("Show_Changes"));
         var isChangesButtonActive = changesButton.Enabled;
         changesButton.Click();
@@ -129,13 +125,7 @@ void ExportCreditors()
 
             var lastUpdate = changesRow[changesRow.Count - 2];
             var lastUpdateColumns = lastUpdate.FindElements(By.TagName("td"));
-
-            if (!headerInitialized)
-            {
-                headers.Add("Date And Time");
-                headers.Add("User");
-            }
-
+            
             exportRow.Add(lastUpdateColumns[1].Text);
             exportRow.Add(lastUpdateColumns[3].Text);
         }
@@ -152,7 +142,6 @@ void ExportCreditors()
         ExportForm();
         driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
 
-        headerInitialized = true;
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"\nExported creditor {i + 1} of {rowsCount} successfully");
         Console.ForegroundColor = ConsoleColor.White;
@@ -200,16 +189,13 @@ void ExportSuppliers()
     {
         Console.WriteLine($"\nStarting export of supplier {i + 1} of {rowsCount}. Please wait...");
         exportRow = new List<string>();
+        headers = new List<string>();
 
         var row = driver.FindElements(By.TagName("tr")).Skip(2 + i).First();
         if (row.GetAttribute("class").Contains("footer")) continue;
         var columns = row.FindElements(By.TagName("td"));
 
-        if (!headerInitialized)
-        {
-            headers.Add("Linked Stock");
-        }
-
+        headers.Add("Linked Stock");
         exportRow.Add(columns.Last().Text);
 
         var firstColumn = columns.First();
@@ -222,7 +208,6 @@ void ExportSuppliers()
         ExportForm();
         driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
 
-        headerInitialized = true;
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"\nExported creditor {i + 1} of {rowsCount} successfully");
         Console.ForegroundColor = ConsoleColor.White;
@@ -249,6 +234,7 @@ void ExportSuppliers()
 
 void ExportForm()
 {
+    var reachedBankAccountTable = false;
     var table = driver.FindElement(By.TagName("table"));
     var rows = table.FindElements(By.TagName("tr"));
 
@@ -256,24 +242,33 @@ void ExportForm()
 
     foreach (var row in rows)
     {
-        ExportFormRow(row);
+        ExportFormRow(row, ref reachedBankAccountTable);
     }
 }
 
-void ExportFormRow(IWebElement row)
+void ExportFormRow(IWebElement row, ref bool reachedBankAccountTable)
 {
-    if (row.FindElements(By.TagName("table")).Count != 0) return;
+    if (row.FindElements(By.TagName("table")).Count != 0)
+    {
+        reachedBankAccountTable = true;
+        return;
+    }
     var columns = row.FindElements(By.TagName("td"));
 
     foreach (var column in columns)
     {
         ExportColumn(column);
     }
+    
+    if (exportRow.Count < headers.Count && !reachedBankAccountTable)
+    {
+        exportRow.Add(string.Empty);
+    }
 }
 
 void ExportColumn(IWebElement column)
 {
-    if (column.GetAttribute("class") == "label" && !headerInitialized)
+    if (column.GetAttribute("class") == "label")
     {
         headers.Add(column.Text.Replace("\r\n", " "));
     }
@@ -284,7 +279,7 @@ void ExportColumn(IWebElement column)
 
         foreach (var element in elements)
         {
-            if (element.GetAttribute("class") == "label" && !headerInitialized)
+            if (element.GetAttribute("class") == "label")
             {
                 headers.Add(element.Text.Replace("\r\n", " "));
             }

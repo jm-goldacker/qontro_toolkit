@@ -1,0 +1,93 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Qontro.Toolkit.Ui.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Qontro.Toolkit.Ui.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Qontro.Toolkit.Ui">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+        <StackPanel
+            Spacing="10">
+
+            <Grid ColumnDefinitions="10,Auto,10,*,10"
+                  RowDefinitions="10,*,10,*,10,*,10,*,10">
+                
+                <Label Grid.Row="1"
+                       Grid.Column="1"
+                       Content="URL for Qontro:"
+                       VerticalAlignment="Center"/>
+                <TextBox Grid.Row="1"  
+                         Grid.Column="3"
+                         Text="{Binding Url}"></TextBox>
+
+                <Label Grid.Row="3"
+                       Grid.Column="1"  
+                       Content="User:"
+                       VerticalAlignment="Center"/>        
+                <TextBox  Grid.Column="3" 
+                          Grid.Row="3"
+                          Text="{Binding User}"></TextBox>
+
+                <Label Grid.Column="1" 
+                       Grid.Row="5"
+                       Content="Password:" 
+                       VerticalAlignment="Center"/>
+                <TextBox  Grid.Column="3" 
+                          Grid.Row="5"
+                          PasswordChar="*"
+                          Text="{Binding Password}"></TextBox>
+
+                <Label Grid.Column="1" 
+                       Grid.Row="7"
+                       Content="Save credentials?"
+                       VerticalAlignment="Center"/>
+                <CheckBox Grid.Column="3" Grid.Row="7"></CheckBox>
+            </Grid>
+           
+            <Button
+                Margin="10,0"
+                Content="Login" 
+                Command="{Binding Login}"
+                IsEnabled="{Binding NeedsLogin}"
+                HorizontalAlignment="Stretch" />
+            <Button
+                Margin="10,0"
+                Content="Export Creditors" 
+                Command="{Binding ExportCreditors}"
+                IsEnabled="{Binding IsExportPossible}"
+                HorizontalAlignment="Stretch" />
+            <Button
+                Margin="10,0"
+                Content="Export Suppliers" 
+                Command="{Binding ExportSuppliers}"
+                IsEnabled="{Binding IsExportPossible}"
+                HorizontalAlignment="Stretch" />
+
+            <Grid ColumnDefinitions="10,Auto,10,*,10"
+                  RowDefinitions="10,*,10">
+                <Label Grid.Column="1" 
+                       Grid.Row="1"
+                       Content="Progress:" 
+                       VerticalAlignment="Top"/>
+                <ProgressBar  Grid.Column="3"
+                              Grid.Row="1"
+                              Value="{Binding Progress}" 
+                              Minimum="0"
+                              Maximum="{Binding ProgressMaximum}"
+                              ProgressTextFormat="{}{0}/{3} Complete ({1:0}%)"
+                              ShowProgressText="True"/>
+
+            </Grid>
+
+        </StackPanel>
+
+</Window>
