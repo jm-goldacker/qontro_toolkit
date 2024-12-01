@@ -297,7 +297,7 @@ public class AccountProcessor
             return;
         }
 
-        var elements = column.FindElements(By.XPath(".//*"));
+        var elements = column.FindElements(By.XPath(".//select | .//input"));
 
         foreach (var element in elements)
         {
@@ -324,7 +324,8 @@ public class AccountProcessor
                 break;
             case "select":
             {
-                var selectedOption = element.FindElements(By.TagName("option")).FirstOrDefault(o => o.Selected);
+                var select = new SelectElement(element);
+                var selectedOption = select.SelectedOption;
                 _exportRow.Add(selectedOption?.Text ?? string.Empty);
                 _exportFieldNames.Add(element.GetAttribute("name"));
                 break;
