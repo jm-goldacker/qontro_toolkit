@@ -19,7 +19,7 @@
             Spacing="10">
 
             <Grid ColumnDefinitions="10,Auto,10,*,10"
-                  RowDefinitions="10,*,10,*,10,*,10,*,10">
+                  RowDefinitions="10,*,10,*,10,*,10">
                 
                 <Label Grid.Row="1"
                        Grid.Column="1"
@@ -45,12 +45,6 @@
                           Grid.Row="5"
                           PasswordChar="*"
                           Text="{Binding Password}"></TextBox>
-
-                <Label Grid.Column="1" 
-                       Grid.Row="7"
-                       Content="Save credentials?"
-                       VerticalAlignment="Center"/>
-                <CheckBox Grid.Column="3" Grid.Row="7"></CheckBox>
             </Grid>
            
             <Button
