@@ -12,9 +12,11 @@ public class CsvWriter(
         fw.WriteLine(string.Join(';', exportFieldNames));
         fw.WriteLine(string.Join(';', headers));
         
-        foreach (var cred in exportRows)
+        foreach (var exportRow in exportRows)
         {
-            fw.WriteLine(string.Join(";", cred));
+            var values = exportRow.ToList();
+            values = values.Select(c => c.Replace(';', '-').Replace(',', '-')).ToList();
+            fw.WriteLine(string.Join(";", values));
         }
 
         fw.Flush();
