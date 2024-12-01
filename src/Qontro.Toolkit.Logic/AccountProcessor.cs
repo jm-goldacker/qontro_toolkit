@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
+using Qontro.Toolkit.DataAccess;
 
 namespace Qontro.Toolkit.Logic;
 
@@ -42,7 +43,7 @@ public class AccountProcessor
     }
 
     // TODO Check Login
-    public void ExportCreditors()
+    public void ExportCreditors(Stream fileStream)
     {
         NavigateToCreditors();
 
@@ -56,7 +57,7 @@ public class AccountProcessor
             if (row.GetAttribute("class").Contains("footer")) continue;
 
             _exportRow = new List<string>();
-            _exportFieldNames = new List<string>() {"", "", "", "", ""};
+            _exportFieldNames = ["", "", "", "", ""];
             _headers = new List<string>();
             
             var columns = row.FindElements(By.TagName("td"));
@@ -82,7 +83,8 @@ public class AccountProcessor
             NavigateBackToOverview();
         }
         
-        SaveAsCsv("creditors");
+        var csvWriter = new CsvWriter(_exportFieldNames, _headers, _exportRows);
+        csvWriter.SaveAsCsv(fileStream);
 
         NavigateBackToMenu();
     }
@@ -136,7 +138,7 @@ public class AccountProcessor
     }
     
     // TODO Check Login
-    public void ExportSuppliers()
+    public void ExportSuppliers(Stream fileStream)
     {
         NavigateToSuppliers();
 
@@ -150,7 +152,7 @@ public class AccountProcessor
             if (row.GetAttribute("class").Contains("footer")) continue;
             
             _exportRow = new List<string>();
-            _exportFieldNames = new List<string>() {"", ""};
+            _exportFieldNames = ["", ""];
             _headers = new List<string>();
             
             var columns = row.FindElements(By.TagName("td"));
@@ -169,7 +171,8 @@ public class AccountProcessor
             NavigateBackToOverview();
         }
 
-        SaveAsCsv("suppliers");
+        var csvWriter = new CsvWriter(_exportFieldNames, _headers, _exportRows);
+        csvWriter.SaveAsCsv(fileStream);
         
         NavigateBackToMenu();
     }
@@ -315,23 +318,6 @@ public class AccountProcessor
     {
         _driver.Navigate().Back();
         _driver.Navigate().Back();
-    }
-
-    private void SaveAsCsv(string fileName)
-    {
-        var csv = File.Open($"{fileName}.csv", FileMode.Create);
-        using var fw = new StreamWriter(csv);
-        
-        fw.WriteLine(string.Join(';', _exportFieldNames));
-        fw.WriteLine(string.Join(';', _headers));
-        
-        foreach (var cred in _exportRows)
-        {
-            fw.WriteLine(string.Join(";", cred));
-        }
-
-        fw.Flush();
-        fw.Close();
     }
     
     private void NavigateBackToMenu()

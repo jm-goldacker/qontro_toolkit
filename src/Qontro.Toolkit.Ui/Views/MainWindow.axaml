@@ -7,7 +7,7 @@
         x:Class="Qontro.Toolkit.Ui.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Qontro.Toolkit.Ui">
+        Title="Qontro Toolkit">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -51,8 +51,23 @@
                 Margin="10,0"
                 Content="Login" 
                 Command="{Binding Login}"
-                IsEnabled="{Binding NeedsLogin}"
+                IsEnabled="{Binding IsLoginNeeded}"
                 HorizontalAlignment="Stretch" />
+            
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Stretch"
+                        Margin="10,0">
+                
+                <Label>export file:</Label>
+                <Label HorizontalAlignment="Stretch"
+                       Content="{Binding FilePath}"/>
+                <Button Content="..." 
+                        Click="filePickerButton_OnClick"
+                        IsEnabled="{Binding IsLoginNeeded}"
+                        HorizontalAlignment="Stretch" />
+                
+            </StackPanel>
+            
             <Button
                 Margin="10,0"
                 Content="Export Creditors" 

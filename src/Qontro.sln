@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qontro.Toolkit.Ui", "Qontro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qontro.Toolkit.Logic", "Qontro.Toolkit.Logic\Qontro.Toolkit.Logic.csproj", "{F9BB371F-9FDD-45E9-8141-CD8D1F1939BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qontro.Toolkit.DataAccess", "Qontro.Toolkit.DataAccess\Qontro.Toolkit.DataAccess.csproj", "{AF9DB39C-B7A9-4045-BEA4-4C555F64C519}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F9BB371F-9FDD-45E9-8141-CD8D1F1939BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9BB371F-9FDD-45E9-8141-CD8D1F1939BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9BB371F-9FDD-45E9-8141-CD8D1F1939BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF9DB39C-B7A9-4045-BEA4-4C555F64C519}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF9DB39C-B7A9-4045-BEA4-4C555F64C519}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF9DB39C-B7A9-4045-BEA4-4C555F64C519}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF9DB39C-B7A9-4045-BEA4-4C555F64C519}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
