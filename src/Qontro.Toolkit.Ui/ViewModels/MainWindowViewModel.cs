@@ -135,6 +135,13 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    public async Task ImportCreditors()
+    {
+        await Task.Run(() => _accountProcessor?.ImportCreditor());
+    }
+    
+    public async Task ImportSuppliers() {}
+
     private string _url = "https://www14.qontro.com/";
     private string _user = string.Empty;
     private string _password = string.Empty;

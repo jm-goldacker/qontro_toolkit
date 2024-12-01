@@ -63,7 +63,6 @@
                        Content="{Binding FilePath}"/>
                 <Button Content="..." 
                         Click="filePickerButton_OnClick"
-                        IsEnabled="{Binding IsLoginNeeded}"
                         HorizontalAlignment="Stretch" />
                 
             </StackPanel>
@@ -79,6 +78,16 @@
                 Content="Export Suppliers" 
                 Command="{Binding ExportSuppliers}"
                 IsEnabled="{Binding IsExportPossible}"
+                HorizontalAlignment="Stretch" />
+            <Button
+                Margin="10,0"
+                Content="Import Creditors" 
+                Command="{Binding ImportCreditors}"
+                HorizontalAlignment="Stretch" />
+            <Button
+                Margin="10,0"
+                Content="Import Suppliers" 
+                Command="{Binding ImportSuppliers}"
                 HorizontalAlignment="Stretch" />
 
             <Grid ColumnDefinitions="10,Auto,10,*,10"

@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using Qontro.Toolkit.DataAccess;
 
 namespace Qontro.Toolkit.Logic;
@@ -20,7 +21,9 @@ public class AccountProcessor
     {
         ChromeDriverService service = ChromeDriverService.CreateDefaultService();
         service.SuppressInitialDiagnosticInformation = true;
-        _driver = new ChromeDriver(service);
+        var options = new ChromeOptions();
+        options.AddArgument("--no-sandbox");
+        _driver = new ChromeDriver(service, options);
 
         _url = url;
         _user = user;
@@ -40,6 +43,16 @@ public class AccountProcessor
         userField.SendKeys(_user);
         passField.SendKeys(_password);
         submitButton.Click();
+    }
+
+    public void ImportCreditor()
+    {
+        NavigateToCreditors("ZTEST");
+        ClickMaintainCreditorButton();
+        var selectElement = _driver.FindElement(By.Name("ganal__rowid"));
+        var select = new SelectElement(selectElement);
+        // var option = select.FindElement(By.LinkText("[00188] Rebates"));
+        select.SelectByText("[00188] Rebates");
     }
 
     // TODO Check Login
@@ -67,9 +80,8 @@ public class AccountProcessor
             var isChangesButtonActive = ExportLastUpdated();
             ExportLink(creditorLinkHref);
 
-            var maintainButton = _driver.FindElement(By.Name("Maintain_Creditor"));
-            maintainButton.Click();
-            
+            ClickMaintainCreditorButton();
+
             ExportForm();
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
             
@@ -87,6 +99,12 @@ public class AccountProcessor
         csvWriter.SaveAsCsv(fileStream);
 
         NavigateBackToMenu();
+    }
+
+    private void ClickMaintainCreditorButton()
+    {
+        var maintainButton = _driver.FindElement(By.Name("Maintain_Creditor"));
+        maintainButton.Click();
     }
 
     private void NavigateToCreditors(string? creditorCode = null)
