@@ -11,6 +11,7 @@ public class AccountProcessor
     private readonly IWebDriver _driver;
     private readonly List<List<string>> _exportRows = new();
     private List<string> _headers = new();
+    private readonly List<string> _headersReadOnly = new();
     private List<string> _exportRow = new();
     private List<string> _exportFieldNames = new();
     private readonly string _url;
@@ -297,7 +298,7 @@ public class AccountProcessor
             return;
         }
 
-        var elements = column.FindElements(By.XPath(".//select | .//input"));
+        var elements = column.FindElements(By.XPath(".//select | .//input | .//span"));
 
         foreach (var element in elements)
         {
@@ -309,7 +310,8 @@ public class AccountProcessor
 
             ExportInputField(element);
 
-            if (_headers.Count < _exportRow.Count) _headers.Add(string.Empty);
+            if (_headers.Count < _exportRow.Count) 
+                _headers.Add(string.Empty);
         }
     }
 
