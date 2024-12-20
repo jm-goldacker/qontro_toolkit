@@ -60,9 +60,22 @@
                 
                 <Label>export file:</Label>
                 <Label HorizontalAlignment="Stretch"
-                       Content="{Binding FilePath}"/>
+                       Content="{Binding ExportFilePath}"/>
                 <Button Content="..." 
                         Click="filePickerButton_OnClick"
+                        HorizontalAlignment="Stretch" />
+                
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Stretch"
+                        Margin="10,0">
+                
+                <Label>import file:</Label>
+                <Label HorizontalAlignment="Stretch"
+                       Content="{Binding ImportFilePath}"/>
+                <Button Content="..." 
+                        Click="importFilePickerButton_OnClick"
                         HorizontalAlignment="Stretch" />
                 
             </StackPanel>
@@ -83,11 +96,13 @@
                 Margin="10,0"
                 Content="Import Creditors" 
                 Command="{Binding ImportCreditors}"
+                IsEnabled="{Binding IsImportPossible}"
                 HorizontalAlignment="Stretch" />
             <Button
                 Margin="10,0"
                 Content="Import Suppliers" 
                 Command="{Binding ImportSuppliers}"
+                IsEnabled="{Binding IsImportPossible}"
                 HorizontalAlignment="Stretch" />
 
             <Grid ColumnDefinitions="10,Auto,10,*,10"

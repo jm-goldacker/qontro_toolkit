@@ -65,36 +65,67 @@ public partial class MainWindowViewModel : ViewModelBase
             _isLoginNeeded = value;
             OnPropertyChanged();
 
-            if (IsLoginNeeded && FileStream != null)
+            if (IsLoginNeeded && ExportFileStream != null)
             {
                 IsExportPossible = true;
             }
         }
     }
     
-    public Stream? FileStream
+    public Stream? ExportFileStream
     {
-        get => _fileStream;
+        get => _exportFileStream;
         set
         {
-            _fileStream?.Dispose();
-            _fileStream = value;
+            _exportFileStream?.Dispose();
+            _exportFileStream = value;
             OnPropertyChanged();
 
-            if (FileStream != null && !IsLoginNeeded)
+            if (ExportFileStream != null && !IsLoginNeeded)
             {
                 IsExportPossible = true;
             }
         }
     }
     
-    public string? FilePath
+    public Stream? ImportFileStream
     {
-        get => _filePath;
+        get => _importFileStream;
         set
         {
-            _filePath = value ?? "no file selected";
+            _importFileStream?.Dispose();
+            _importFileStream = value;
             OnPropertyChanged();
+
+            if (ImportFileStream != null && !IsLoginNeeded)
+            {
+                IsImportPossible = true;
+            }
+        }
+    }
+    
+    public string? ExportFilePath
+    {
+        get => _exportFilePath;
+        set
+        {
+            _exportFilePath = value ?? "no file selected";
+            OnPropertyChanged();
+        }
+    }
+    
+    public string? ImportFilePath
+    {
+        get => _importFilePath;
+        set
+        {
+            _importFilePath = value ?? "no file selected";
+            OnPropertyChanged();
+            
+            if (ImportFilePath != null && !IsLoginNeeded)
+            {
+                IsImportPossible = true;
+            }
         }
     }
 
@@ -104,6 +135,16 @@ public partial class MainWindowViewModel : ViewModelBase
         set
         {
             _isExportPossible = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool IsImportPossible
+    {
+        get => _isImportPossible;
+        set
+        {
+            _isImportPossible = value;
             OnPropertyChanged();
         }
     }
@@ -121,23 +162,26 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public async Task ExportCreditors()
     {
-        if (FileStream != null)
+        if (ExportFileStream != null)
         {
-            await Task.Run(() => _accountProcessor?.ExportCreditors(FileStream));
+            await Task.Run(() => _accountProcessor?.ExportCreditors(ExportFileStream));
         }
     }
 
     public async Task ExportSuppliers()
     {
-        if (FileStream != null)
+        if (ExportFileStream != null)
         {
-            await Task.Run(() => _accountProcessor?.ExportSuppliers(FileStream));
+            await Task.Run(() => _accountProcessor?.ExportSuppliers(ExportFileStream));
         }
     }
 
     public async Task ImportCreditors()
     {
-        await Task.Run(() => _accountProcessor?.ImportCreditor());
+        if (ImportFilePath != null)
+        {
+            await Task.Run(() => _accountProcessor?.ImportCreditor(ImportFilePath));
+        }
     }
     
     public async Task ImportSuppliers() {}
@@ -150,7 +194,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private AccountProcessor? _accountProcessor;
     private bool _isLoginNeeded = true;
-    private Stream? _fileStream;
-    private string? _filePath = "no file selected";
+    private Stream? _exportFileStream;
+    private Stream? _importFileStream;
+    private string? _exportFilePath = "no file selected";
+    private string? _importFilePath = "no file selected";
     private bool _isExportPossible;
+    private bool _isImportPossible;
 }

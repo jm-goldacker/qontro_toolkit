@@ -11,7 +11,6 @@ public class AccountProcessor
     private readonly IWebDriver _driver;
     private readonly List<List<string>> _exportRows = new();
     private List<string> _headers = new();
-    private readonly List<string> _headersReadOnly = new();
     private List<string> _exportRow = new();
     private List<string> _exportFieldNames = new();
     private readonly string _url;
@@ -46,20 +45,28 @@ public class AccountProcessor
         submitButton.Click();
     }
 
-    public void ImportCreditor()
+    public void ImportCreditor(string filePath)
     {
-        NavigateToCreditors("ZTEST");
-        ClickMaintainCreditorButton();
-        var selectElement = _driver.FindElement(By.Name("ganal__rowid"));
-        var select = new SelectElement(selectElement);
-        // var option = select.FindElement(By.LinkText("[00188] Rebates"));
-        select.SelectByText("[00188] Rebates");
+        var csvReader = new CsvReader(filePath);
+
+        NavigateToCreditorEnquiry();
+        
+        foreach (var exportRow in csvReader.ExportRows)
+        {
+            var creditorCode = exportRow[5];
+            ClearAndSearchAccount(creditorCode);
+            ClickMaintainCreditorButton();
+            _driver.Navigate().Back();
+        }
+        
     }
 
     // TODO Check Login
     public void ExportCreditors(Stream fileStream)
     {
-        NavigateToCreditors();
+        NavigateToCreditorEnquiry();
+
+        ClearAndSearchAccount();
 
         var rowsCount = GetRowsCount();
 
@@ -108,16 +115,14 @@ public class AccountProcessor
         maintainButton.Click();
     }
 
-    private void NavigateToCreditors(string? creditorCode = null)
+    private void NavigateToCreditorEnquiry()
     {
         var creditorsMenu = _driver.FindElement(By.Id("Creditors"));
         creditorsMenu.Click();
         var enquiryButton = _driver.FindElements(By.ClassName("OUTER_MENU_ITEM"))[1]; 
         enquiryButton.Click();
-
-        ClearAndSearchAccount(creditorCode);
     }
-    
+
     private void ExportPayment(ReadOnlyCollection<IWebElement> columns)
     {
         _headers.Add("Last Payment");
@@ -212,7 +217,7 @@ public class AccountProcessor
         _exportRow.Add(columns.Last().Text);
     }
     
-    private void ClearAndSearchAccount(string? code)
+    private void ClearAndSearchAccount(string? code = null)
     {
         var clearButton = _driver.FindElement(By.Name("clear"));
         clearButton.Click();
