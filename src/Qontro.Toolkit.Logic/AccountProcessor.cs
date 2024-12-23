@@ -48,17 +48,68 @@ public class AccountProcessor
     public void ImportCreditor(string filePath)
     {
         var csvReader = new CsvReader(filePath);
-
+        var fieldNames = csvReader.FieldNames.ToList();
+        
         NavigateToCreditorEnquiry();
         
-        foreach (var exportRow in csvReader.ExportRows)
+        foreach (var fieldValues in csvReader.Data)
         {
-            var creditorCode = exportRow[5];
+            var creditorCode = fieldValues[5];
             ClearAndSearchAccount(creditorCode);
             ClickMaintainCreditorButton();
+            Import(fieldValues, fieldNames);
             _driver.Navigate().Back();
         }
         
+    }
+
+    private void Import(List<string> fieldValues, List<string> fieldNames)
+    {
+        for (int i = 6; i < fieldValues.Count && i < fieldNames.Count(); i++)
+        {
+            var element = _driver.FindElement(By.Name(fieldNames[i]));
+            if (element is null) continue;
+                
+            if (fieldValues[i] == "~")
+            {
+                RemoveValue(element);
+            }
+            else if (!string.IsNullOrEmpty(fieldValues[i]))
+            {
+                SetValue(element, fieldNames[i], fieldValues[i]);
+            }
+        }
+    }
+
+    private void RemoveValue(IWebElement element)
+    {
+        switch (element.TagName)
+        {
+            case "input" when element.GetAttribute("type") == "text":
+                element.Clear();
+                break;
+        }
+    }
+
+    private void SetValue(IWebElement element, string fieldName, string value)
+    {
+        switch (element.TagName)
+        {
+            case "input" when element.GetAttribute("type") == "text":
+                element.Clear();
+                element.SendKeys(value);
+                break;
+            case "input" when element.GetAttribute("type") == "radio":
+                var radioButton = _driver.FindElements(By.Name(fieldName))
+                    .FirstOrDefault(b => b.GetAttribute("value") == value);
+                radioButton?.Click();
+                break;
+            case "select":
+                var selectElement = new SelectElement(element);
+                selectElement.SelectByText(value);
+                break;
+            
+        }
     }
 
     // TODO Check Login

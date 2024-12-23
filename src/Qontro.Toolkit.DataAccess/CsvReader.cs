@@ -4,10 +4,10 @@ public class CsvReader
 {
     public CsvReader(string filePath)
     {
-        ExportRows = new List<List<string>>();
+        Data = new List<List<string>>();
         using var streamReader = new StreamReader(filePath);
         
-        ExportFieldNames = streamReader.ReadLine()?.Split(",").ToList() ?? 
+        FieldNames = streamReader.ReadLine()?.Split(",").ToList() ?? 
                            throw new InvalidDataException("no export field names found");
         
         streamReader.ReadLine();
@@ -15,12 +15,12 @@ public class CsvReader
         while (streamReader.ReadLine() is { } line)
         {
             var row = line.Split(",");
-            ExportRows.Add(row.ToList());
+            Data.Add(row.ToList());
         }
         
         streamReader.Close();
     }
     
-    public IEnumerable<string> ExportFieldNames { get; private init; }
-    public List<List<string>> ExportRows { get; }
+    public IEnumerable<string> FieldNames { get; private init; }
+    public List<List<string>> Data { get; }
 }
