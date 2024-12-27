@@ -1,6 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using Qontro.Toolkit.Logic;
+using Qontro.Toolkit.Logic.Events;
+using Qontro.Toolkit.Logic.Export;
+using Qontro.Toolkit.Logic.Import;
+using Qontro.Toolkit.Logic.WebDriver;
 
 namespace Qontro.Toolkit.Ui.ViewModels;
 
@@ -148,15 +151,11 @@ public partial class MainWindowViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
-
+    
     public async Task Login()
     {
         if (string.IsNullOrEmpty(Url) || string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password)) return;
-        _accountProcessor = new AccountProcessor(Url, User, Password);
-        _accountProcessor.RowsCountChanged += (_, e) => ProgressMaximum = e.RowsCount;
-        _accountProcessor.CurrentProcessingItemChanged += (_, e) => Progress = e.CurrentItem;
-        await Task.Run(_accountProcessor.Login);
-        
+        await Task.Run(() => SeleniumWebDriver.Instance.Login(Url, User, Password));
         IsLoginNeeded = false;
     }
 
@@ -164,7 +163,8 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (ExportFileStream != null)
         {
-            await Task.Run(() => _accountProcessor?.ExportCreditors(ExportFileStream));
+            var creditorExport = new CreditorExport();
+            await RunExport(creditorExport);
         }
     }
 
@@ -172,19 +172,33 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (ExportFileStream != null)
         {
-            await Task.Run(() => _accountProcessor?.ExportSuppliers(ExportFileStream));
+            var supplierExport = new SupplierExport();
+            await RunExport(supplierExport);
         }
+    }
+    
+    private async Task RunExport(AccountExport creditorExport)
+    {
+        creditorExport.RowsCountChanged += OnCreditorExportOnRowsCountChanged;
+        creditorExport.CurrentProcessingItemChanged += OnCreditorExportOnCurrentProcessingItemChanged;
+        await Task.Run(() => creditorExport.Export(ExportFileStream!));
+        creditorExport.RowsCountChanged -= OnCreditorExportOnRowsCountChanged;
+        creditorExport.CurrentProcessingItemChanged -= OnCreditorExportOnCurrentProcessingItemChanged;
     }
 
     public async Task ImportCreditors()
     {
         if (ImportFilePath != null)
         {
-            await Task.Run(() => _accountProcessor?.ImportCreditor(ImportFilePath));
+            var creditorImport = new CreditorImport();
+            await Task.Run(() => creditorImport.ImportCreditor(ImportFilePath));
         }
     }
-    
-    public async Task ImportSuppliers() {}
+
+    public async Task ImportSuppliers()
+    {
+        await Task.CompletedTask; 
+    }
 
     private string _url = "https://www14.qontro.com/";
     private string _user = string.Empty;
@@ -192,7 +206,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private int _progress;
     private int _progressMaximum;
 
-    private AccountProcessor? _accountProcessor;
     private bool _isLoginNeeded = true;
     private Stream? _exportFileStream;
     private Stream? _importFileStream;
@@ -200,4 +213,15 @@ public partial class MainWindowViewModel : ViewModelBase
     private string? _importFilePath = "no file selected";
     private bool _isExportPossible;
     private bool _isImportPossible;
+    
+    private void OnCreditorExportOnCurrentProcessingItemChanged(object? _, CurrentProcessingItemChangedEventArgs e)
+    {
+        Progress = e.CurrentItem;
+    }
+
+    private void OnCreditorExportOnRowsCountChanged(object? _, RowsCountChangedEventArgs e)
+    {
+        ProgressMaximum = e.RowsCount;
+    }
+    
 }

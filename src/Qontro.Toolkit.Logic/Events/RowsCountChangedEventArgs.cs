@@ -1,4 +1,4 @@
-﻿namespace Qontro.Toolkit.Logic;
+﻿namespace Qontro.Toolkit.Logic.Events;
 
 public class RowsCountChangedEventArgs(int rowsCount) : EventArgs
 {
