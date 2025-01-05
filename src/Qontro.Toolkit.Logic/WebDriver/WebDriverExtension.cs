@@ -73,4 +73,9 @@ public static class WebDriverExtension
         webDriver.Navigate().Back();
         webDriver.Navigate().Back();
     }
+
+    public static void ClickSaveButton(this IWebDriver webDriver)
+    {
+        webDriver.FindElement(By.Name("save")).Click();
+    }
 }

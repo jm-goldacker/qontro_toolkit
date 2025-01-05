@@ -20,16 +20,28 @@ public class CreditorImport
             SeleniumWebDriver.Instance.ClearAndSearchAccount(creditorCode);
             SeleniumWebDriver.Instance.ClickMaintainCreditorButton();
             Import(fieldValues, fieldNames);
+            SeleniumWebDriver.Instance.ClickSaveButton();
+            SeleniumWebDriver.Instance.Navigate().Back();
             SeleniumWebDriver.Instance.Navigate().Back();
         }
         
+        SeleniumWebDriver.Instance.FindElement(By.Id("menu-creditor-home")).Click();
     }
 
     private void Import(List<string> fieldValues, List<string> fieldNames)
     {
         for (int i = 6; i < fieldValues.Count && i < fieldNames.Count(); i++)
         {
-            var element = SeleniumWebDriver.Instance.FindElement(By.Name(fieldNames[i]));
+            IWebElement? element;
+            try
+            {
+                element = SeleniumWebDriver.Instance.FindElement(By.Name(fieldNames[i]));
+            }
+            catch (NoSuchElementException)
+            {
+                element = null;
+            }
+            
             if (element is null) continue;
                 
             if (fieldValues[i] == "~")
