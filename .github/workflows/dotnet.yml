@@ -54,7 +54,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
 
     - name: Upload Build Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Qontro.Toolkit.win_x64
         path: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/win_x64/
