@@ -6,7 +6,7 @@ on:
 
 env:
   APP_NAME: Qontro.Toolkit
-  APP_PACKAGE_PATH: './src/Qontro.Toolkit.Ui/'
+  APP_PACKAGE_PATH: './src/Qontro.Toolkit.Ui'
   DOTNET_VERSION: '8.0.404' 
 
 jobs:
@@ -36,20 +36,20 @@ jobs:
         cd ${{ env.APP_PACKAGE_PATH }}
         dotnet publish -r win-x64 -o ./publish/win_x64 -c Release -f net8.0 --self-contained
     
-    - name: Get version
-      id: package_version
-      uses: KageKirin/get-csproj-version@v1.0.0
+    - uses: bbonkr/get-version-action@v1
+      id: get_version
       with:
-        file: ${{ env.APP_PACKAGE_PATH }}/Qontro.Toolkit.Ui.csproj
-    
+        project: ${{ env.APP_PACKAGE_PATH }}/Qontro.Toolkit.Ui.csproj
+        show_log_message: true
+
     - name: release
       uses: actions/create-release@v1
       id: create_release
       with:
         draft: false
         prerelease: false
-        release_name: v${{ steps.package_version.outputs.version }}
-        tag_name: v${{ steps.package_version.outputs.version }}
+        release_name: v${{ steps.get_version.outputs.version }}
+        tag_name: v${{ steps.get_version.outputs.version }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         
