@@ -38,7 +38,7 @@ jobs:
       id: package_version
       uses: KageKirin/get-csproj-version@v0
       with:
-        file: ${{ APP_PACKAGE_PATH }}/Qontro.Toolkit.Ui.csproj
+        file: ${{ env.APP_PACKAGE_PATH }}/Qontro.Toolkit.Ui.csproj
     
     - name: release
       uses: actions/create-release@v1
@@ -46,7 +46,7 @@ jobs:
       with:
         draft: false
         prerelease: false
-        release_name: ${{ steps.version.outputs.version }}
+        release_name: ${{ steps.package_version.version }}
         tag_name: ${{ github.ref }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
