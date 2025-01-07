@@ -56,4 +56,5 @@ jobs:
     - name: upload win-x64 artifact
       uses: softprops/action-gh-release@v2
       with:
+        tag_name: v${{ steps.get_version.outputs.version }}
         files: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/win_x64/*
