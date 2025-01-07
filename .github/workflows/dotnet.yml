@@ -53,8 +53,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v4
+    - name: upload win-x64 artifact
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        name: Qontro.Toolkit.win_x64
-        path: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/win_x64/
+        files: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/win_x64/*
