@@ -30,11 +30,33 @@ jobs:
       run: |
         cd ${{ env.APP_PACKAGE_PATH }}
         dotnet build --configuration Release --no-restore
-        dotnet publish -r win-x64 -o ./publish/win_x64 -c Release -f net8.0 --self-contained
-      
-    - uses: azure/webapps-deploy@v2
-      name: Deploy
+
+    - name: Publish win-x64
+      run: dotnet publish -r win-x64 -o ./publish/win_x64 -c Release -f net8.0 --self-contained
+    
+    - name: Get version
+      id: package_version
+      uses: KageKirin/get-csproj-version@v0
       with:
-        app-name: ${{ env.APP_NAME }}
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-        package: '${{ env.APP_PACKAGE_PATH }}/publish/win_x64'
+        file: ${{ APP_PACKAGE_PATH }}/Qontro.Toolkit.Ui.csproj
+    
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: false
+        release_name: ${{ steps.version.outputs.version }}
+        tag_name: ${{ github.ref }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        
+    - name: upload win-x64 artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./publish/win_x64
+        asset_name: Qontro.Toolkit.win_x64.tar.gz
+        asset_content_type: application/gzip
