@@ -52,13 +52,9 @@ jobs:
         tag_name: v${{ steps.get_version.outputs.version }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
-        
-    - name: upload win-x64 artifact
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v2
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/win_x64/*
-        asset_name: Qontro.Toolkit.win_x64.tar.gz
-        asset_content_type: application/gzip
+        name: Qontro.Toolkit.win_x64
+        path: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/win_x64/
