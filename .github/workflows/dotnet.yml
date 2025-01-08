@@ -31,17 +31,12 @@ jobs:
         cd ${{ env.APP_PACKAGE_PATH }}
         dotnet build --configuration Release --no-restore
 
-    - name: Publish win-x64
-      run: |
-        cd ${{ env.APP_PACKAGE_PATH }}
-        dotnet publish -r win-x64 -o ./publish/win_x64 -c Release -f net8.0 --self-contained
-    
     - uses: bbonkr/get-version-action@v1
       id: get_version
       with:
         project: ${{ env.APP_PACKAGE_PATH }}/Qontro.Toolkit.Ui.csproj
         show_log_message: true
-
+  
     - name: release
       uses: actions/create-release@v1
       id: create_release
@@ -53,8 +48,110 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
+    - name: Publish win-x64
+      run: |
+        cd ${{ env.APP_PACKAGE_PATH }}
+        dotnet publish -r win-x64 -o ./publish/win_x64 -c Release -f net8.0 --self-contained --no-restore
+
+    - name: Publish win-arm64
+      run: |
+        cd ${{ env.APP_PACKAGE_PATH }}
+        dotnet publish -r win-arm64 -o ./publish/win-arm64 -c Release -f net8.0 --self-contained --no-restore
+
+    - name: Publish win-x86
+      run: |
+        cd ${{ env.APP_PACKAGE_PATH }}
+        dotnet publish -r win-x86 -o ./publish/win-x86 -c Release -f net8.0 --self-contained --no-restore
+
+    - name: Publish linux-x64
+      run: |
+        cd ${{ env.APP_PACKAGE_PATH }}
+        dotnet publish -r linux-x64 -o ./publish/linux-x64 -c Release -f net8.0 --self-contained --no-restore
+
+    - name: Publish linux-arm
+      run: |
+        cd ${{ env.APP_PACKAGE_PATH }}
+        dotnet publish -r linux-arm -o ./publish/linux-arm -c Release -f net8.0 --self-contained --no-restore
+
+    - name: Publish linux-arm64
+      run: |
+        cd ${{ env.APP_PACKAGE_PATH }}
+        dotnet publish -r linux-arm64 -o ./publish/linux-arm64 -c Release -f net8.0 --self-contained --no-restore
+
+    - name: Compress win-x64
+      uses: somaz94/compress-decompress@v1
+      with:
+        command: compress
+        source: ${{ env.APP_PACKAGE_PATH }}/publish/win_x64
+        format: zip
+
+    - name: Compress win-arm64
+      uses: somaz94/compress-decompress@v1
+      with:
+        command: compress
+        source: ${{ env.APP_PACKAGE_PATH }}/publish/win-arm64
+        format: zip
+
+    - name: Compress win-x86
+      uses: somaz94/compress-decompress@v1
+      with:
+        command: compress
+        source: ${{ env.APP_PACKAGE_PATH }}/publish/win-x86
+        format: zip
+
+    - name: Compress linux-x64
+      uses: somaz94/compress-decompress@v1
+      with:
+        command: compress
+        source: ${{ env.APP_PACKAGE_PATH }}/publish/linux-x64
+        format: zip
+
+    - name: Compress linux-arm
+      uses: somaz94/compress-decompress@v1
+      with:
+        command: compress
+        source: ${{ env.APP_PACKAGE_PATH }}/publish/linux-arm
+        format: zip
+
+    - name: Compress linux-arm64
+      uses: somaz94/compress-decompress@v1
+      with:
+        command: compress
+        source: ${{ env.APP_PACKAGE_PATH }}/publish/linux-arm64
+        format: zip
+
     - name: upload win-x64 artifact
       uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ steps.get_version.outputs.version }}
-        files: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/win_x64/*
+        files: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/win_x64.zip
+
+    - name: upload win-arm64 artifact
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ steps.get_version.outputs.version }}
+        files: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/win-arm64.zip
+
+    - name: upload win-x86 artifact
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ steps.get_version.outputs.version }}
+        files: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/win-x86.zip
+
+    - name: upload linux-x64 artifact
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ steps.get_version.outputs.version }}
+        files: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/linux-x64.zip
+
+    - name: upload linux-arm artifact
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ steps.get_version.outputs.version }}
+        files: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/linux-arm.zip
+
+    - name: upload linux-arm64 artifact
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ steps.get_version.outputs.version }}
+        files: /home/runner/work/qontro_toolkit/qontro_toolkit/src/Qontro.Toolkit.Ui/publish/linux-arm64.zip
