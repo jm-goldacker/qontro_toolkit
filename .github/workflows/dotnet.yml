@@ -51,32 +51,32 @@ jobs:
     - name: Publish win-x64
       run: |
         cd ${{ env.APP_PACKAGE_PATH }}
-        dotnet publish -r win-x64 -o ./publish/win_x64 -c Release -f net8.0 --self-contained --no-restore
+        dotnet publish -r win-x64 -o ./publish/win_x64 -c Release -f net8.0 --self-contained 
 
     - name: Publish win-arm64
       run: |
         cd ${{ env.APP_PACKAGE_PATH }}
-        dotnet publish -r win-arm64 -o ./publish/win-arm64 -c Release -f net8.0 --self-contained --no-restore
+        dotnet publish -r win-arm64 -o ./publish/win-arm64 -c Release -f net8.0 --self-contained 
 
     - name: Publish win-x86
       run: |
         cd ${{ env.APP_PACKAGE_PATH }}
-        dotnet publish -r win-x86 -o ./publish/win-x86 -c Release -f net8.0 --self-contained --no-restore
+        dotnet publish -r win-x86 -o ./publish/win-x86 -c Release -f net8.0 --self-contained 
 
     - name: Publish linux-x64
       run: |
         cd ${{ env.APP_PACKAGE_PATH }}
-        dotnet publish -r linux-x64 -o ./publish/linux-x64 -c Release -f net8.0 --self-contained --no-restore
+        dotnet publish -r linux-x64 -o ./publish/linux-x64 -c Release -f net8.0 --self-contained 
 
     - name: Publish linux-arm
       run: |
         cd ${{ env.APP_PACKAGE_PATH }}
-        dotnet publish -r linux-arm -o ./publish/linux-arm -c Release -f net8.0 --self-contained --no-restore
+        dotnet publish -r linux-arm -o ./publish/linux-arm -c Release -f net8.0 --self-contained
 
     - name: Publish linux-arm64
       run: |
         cd ${{ env.APP_PACKAGE_PATH }}
-        dotnet publish -r linux-arm64 -o ./publish/linux-arm64 -c Release -f net8.0 --self-contained --no-restore
+        dotnet publish -r linux-arm64 -o ./publish/linux-arm64 -c Release -f net8.0 --self-contained
 
     - name: Compress win-x64
       uses: somaz94/compress-decompress@v1
