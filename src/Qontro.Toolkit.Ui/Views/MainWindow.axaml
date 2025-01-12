@@ -121,6 +121,7 @@
 
             </Grid>
 
+            <Label Margin="10" x:Name="VersionLabel"/>
         </StackPanel>
 
 </Window>
