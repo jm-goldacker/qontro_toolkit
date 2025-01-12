@@ -4,6 +4,7 @@ using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using Qontro.Toolkit.Ui.FilePickerTypes;
 using Qontro.Toolkit.Ui.ViewModels;
 
 namespace Qontro.Toolkit.Ui.Views;
@@ -70,10 +71,10 @@ public partial class MainWindow : Window
             var storageFiles = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
             {
                 Title = "Open import file",
-                FileTypeFilter = new []
-                {
-                    new FilePickerFileType("csv")
-                }
+                FileTypeFilter =
+                [
+                    CustomFilePickerTypes.Csv
+                ]
             });
 
             var file = storageFiles.First();
