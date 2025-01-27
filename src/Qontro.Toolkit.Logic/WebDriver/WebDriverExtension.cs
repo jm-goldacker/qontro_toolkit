@@ -4,7 +4,7 @@ namespace Qontro.Toolkit.Logic.WebDriver;
 
 public static class WebDriverExtension
 {
-    public static void Login(this IWebDriver webDriver, string url, string username, string password)
+    public static bool Login(this IWebDriver webDriver, string url, string username, string password)
     {
         webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
         webDriver.Navigate().GoToUrl(url);
@@ -14,6 +14,20 @@ public static class WebDriverExtension
         userField.SendKeys(username);
         passField.SendKeys(password);
         submitButton.Click();
+
+        try
+        {
+            if (webDriver.FindElement(By.Id("MAIN")) != null)
+            {
+                return true;
+            }
+        }
+        catch (NoSuchElementException)
+        {
+            return false;
+        }
+
+        return true;
     }
     
     public static void NavigateToCreditorEnquiry(this IWebDriver webDriver)
@@ -30,14 +44,12 @@ public static class WebDriverExtension
         maintainButton.Click();
     }
     
-    public static void NavigateToSuppliers(this IWebDriver webDriver, string? supplierCode = null)
+    public static void NavigateToSupplierEnquiry(this IWebDriver webDriver)
     {
         var creditorsMenu = webDriver.FindElement(By.Id("Stock"));
         creditorsMenu.Click();
         var enquiryButton = webDriver.FindElements(By.ClassName("OUTER_MENU_ITEM"))[2];
         enquiryButton.Click();
-        
-        webDriver.ClearAndSearchAccount(supplierCode);
     }
     
     public static void ClickMaintainSupplierButton(this IWebDriver webDriver)
@@ -45,18 +57,27 @@ public static class WebDriverExtension
         var maintainButton = webDriver.FindElement(By.Name("Maintain_Supplier"));
         maintainButton.Click();
     }
-    
-    public static void ClearAndSearchAccount(this IWebDriver webDriver, string? code = null)
+
+    public static void ClearSearch(this IWebDriver webDriver)
     {
         var clearButton = webDriver.FindElement(By.Name("clear"));
         clearButton.Click();
+    }
+    
+    public static void EnterCreditorCode(this IWebDriver webDriver, string code)
+    {
+        var inputField = webDriver.FindElement(By.Name("cAcct__Code"));
+        inputField.SendKeys(code);
+    }
 
-        if (!string.IsNullOrEmpty(code))
-        {
-            var inputField = webDriver.FindElement(By.Name("cAcct__Code"));
-            inputField.SendKeys(code);
-        }
-        
+    public static void EnterSupplierCode(this IWebDriver webDriver, string code)
+    {
+        var inputField = webDriver.FindElement(By.Name("sSupp__Code"));
+        inputField.SendKeys(code);
+    }
+    
+    public static void StartSearch(this IWebDriver webDriver)
+    {
         var iSearchButton = webDriver.FindElement(By.Name("Search2"));
         iSearchButton.Click();
     }

@@ -8,7 +8,7 @@ public class SupplierExport : AccountExport
 {
     protected override void NavigateToAccount()
     {
-        SeleniumWebDriver.Instance.NavigateToSuppliers();
+        SeleniumWebDriver.Instance.NavigateToSupplierEnquiry();
     }
 
     protected override void InitExportFields()

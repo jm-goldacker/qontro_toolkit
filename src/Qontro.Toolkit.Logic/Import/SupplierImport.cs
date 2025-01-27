@@ -3,30 +3,30 @@ using Qontro.Toolkit.Logic.WebDriver;
 
 namespace Qontro.Toolkit.Logic.Import;
 
-public class CreditorImport : AccountImport
+public class SupplierImport : AccountImport
 {
     protected override void NavigateToEnquiry()
     {
-        SeleniumWebDriver.Instance.NavigateToCreditorEnquiry();
+        SeleniumWebDriver.Instance.NavigateToSupplierEnquiry();
     }
 
     protected override int GetCsvFieldOffset()
     {
-        return 5;
+        return 2;
     }
 
     protected override void EnterCode(string code)
     {
-        SeleniumWebDriver.Instance.EnterCreditorCode(code);
+        SeleniumWebDriver.Instance.EnterSupplierCode(code);
     }
 
     protected override void ClickMaintainButton()
     {
-        SeleniumWebDriver.Instance.ClickMaintainCreditorButton();
+        SeleniumWebDriver.Instance.ClickMaintainSupplierButton();
     }
 
     protected override void ClickMainMenuButton()
     {
-        SeleniumWebDriver.Instance.FindElement(By.Id("menu-creditor-home")).Click();
+        SeleniumWebDriver.Instance.FindElement(By.Id("menu-stock-home")).Click();
     }
 }

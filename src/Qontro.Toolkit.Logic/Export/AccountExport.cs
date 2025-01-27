@@ -20,7 +20,8 @@ public abstract class AccountExport
     public void Export(Stream fileStream)
     {
         NavigateToAccount();
-        SeleniumWebDriver.Instance.ClearAndSearchAccount();
+        SeleniumWebDriver.Instance.ClearSearch();
+        SeleniumWebDriver.Instance.StartSearch();
         
         var rowsCount = GetRowsCount();
         

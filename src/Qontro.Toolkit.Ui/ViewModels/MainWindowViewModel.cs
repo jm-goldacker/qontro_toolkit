@@ -155,8 +155,9 @@ public partial class MainWindowViewModel : ViewModelBase
     public async Task Login()
     {
         if (string.IsNullOrEmpty(Url) || string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password)) return;
-        await Task.Run(() => SeleniumWebDriver.Instance.Login(Url, User, Password));
-        IsLoginNeeded = false;
+        var isSuccessful = false;
+        await Task.Run(() => isSuccessful = SeleniumWebDriver.Instance.Login(Url, User, Password));
+        IsLoginNeeded = !isSuccessful;
     }
 
     public async Task ExportCreditors()
@@ -191,13 +192,17 @@ public partial class MainWindowViewModel : ViewModelBase
         if (ImportFilePath != null)
         {
             var creditorImport = new CreditorImport();
-            await Task.Run(() => creditorImport.ImportCreditor(ImportFilePath));
+            await Task.Run(() => creditorImport.Import(ImportFilePath));
         }
     }
 
     public async Task ImportSuppliers()
     {
-        await Task.CompletedTask; 
+        if (ImportFilePath != null)
+        {
+            var supplierImport = new SupplierImport();
+            await Task.Run(() => supplierImport.Import(ImportFilePath));
+        }
     }
 
     private string _url = "https://www14.qontro.com/";

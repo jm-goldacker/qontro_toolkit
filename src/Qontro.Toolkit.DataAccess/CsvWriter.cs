@@ -15,7 +15,7 @@ public class CsvWriter(
         foreach (var exportRow in exportRows)
         {
             var values = exportRow.ToList();
-            values = values.Select(c => c.Replace(';', '-').Replace(',', '-')).ToList();
+            values = values.Select(c => c.Replace(";", "#0#").Replace("'", "#1#")).ToList();
             fw.WriteLine(string.Join(";", values));
         }
 
