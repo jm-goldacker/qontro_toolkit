@@ -4,6 +4,7 @@ using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using MsBox.Avalonia;
 using Qontro.Toolkit.Ui.FilePickerTypes;
 using Qontro.Toolkit.Ui.ViewModels;
 
@@ -49,9 +50,12 @@ public partial class MainWindow : Window
             viewModel.ExportFileStream = stream;
             viewModel.ExportFilePath = file.Path.AbsolutePath;
         }
-        catch (Exception exception)
+        catch (Exception)
         {
-            throw; // TODO handle exception
+            var box = MessageBoxManager
+                .GetMessageBoxStandard("Error", "Could not access file");
+
+            await box.ShowAsync();
         }
     }
     
@@ -80,9 +84,12 @@ public partial class MainWindow : Window
             var file = storageFiles.First();
             viewModel.ImportFilePath = file.Path.AbsolutePath;
         }
-        catch (Exception exception)
+        catch (Exception)
         {
-            throw; // TODO handle exception
+            var box = MessageBoxManager
+                .GetMessageBoxStandard("Error", "Could not access file");
+
+            await box.ShowAsync();
         }
     }
 }
