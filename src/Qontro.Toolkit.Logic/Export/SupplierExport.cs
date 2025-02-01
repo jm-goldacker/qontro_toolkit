@@ -4,11 +4,11 @@ using Qontro.Toolkit.Logic.WebDriver;
 
 namespace Qontro.Toolkit.Logic.Export;
 
-public class SupplierExport : AccountExport
+public class SupplierExport(ISeleniumWebDriver webDriver) : AccountExport(webDriver), ISupplierExport
 {
     protected override void NavigateToAccount()
     {
-        SeleniumWebDriver.Instance.NavigateToSupplierEnquiry();
+        WebDriver.NavigateToSupplierEnquiry();
     }
 
     protected override void InitExportFields()

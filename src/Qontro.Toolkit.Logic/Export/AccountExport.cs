@@ -7,21 +7,22 @@ using Qontro.Toolkit.Logic.WebDriver;
 
 namespace Qontro.Toolkit.Logic.Export;
 
-public abstract class AccountExport
+public abstract class AccountExport(ISeleniumWebDriver webDriver) : IAccountExport
 {
     private readonly List<List<string>> _exportRows = new();
     protected List<string> Headers = new();
     protected List<string> ExportRow = new();
     protected List<string> ExportFieldNames = new();
+    protected ISeleniumWebDriver WebDriver = webDriver;
 
     public event EventHandler<RowsCountChangedEventArgs>? RowsCountChanged;
     public event EventHandler<CurrentProcessingItemChangedEventArgs>? CurrentProcessingItemChanged;
 
-    public Task Export(Stream fileStream)
+    public void Export(Stream fileStream)
     {
         NavigateToAccount();
-        SeleniumWebDriver.Instance.ClearSearch();
-        SeleniumWebDriver.Instance.StartSearch();
+        WebDriver.ClearSearch();
+        WebDriver.StartSearch();
         
         var rowsCount = GetRowsCount();
         
@@ -29,7 +30,7 @@ public abstract class AccountExport
         {
             CurrentProcessingItemChanged?.Invoke(this, new CurrentProcessingItemChangedEventArgs(i + 1));
             
-            var row = SeleniumWebDriver.Instance.FindElements(By.TagName("tr")).Skip(2 + i).First();
+            var row = WebDriver.FindElements(By.TagName("tr")).Skip(2 + i).First();
             if (row.GetAttribute("class").Contains("footer")) continue;
 
             InitExportFields();
@@ -41,26 +42,25 @@ public abstract class AccountExport
             var isChangesButtonActive = ExportLastUpdated();
             ExportLink(creditorLinkHref);
 
-            SeleniumWebDriver.Instance.ClickMaintainSupplierButton();
+            WebDriver.ClickMaintainSupplierButton();
 
             ExportForm();
-            SeleniumWebDriver.Instance.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+            WebDriver.SetTimeout(TimeSpan.FromSeconds(30));
             
             _exportRows.Add(ExportRow);
             
             if (isChangesButtonActive)
             {
-                SeleniumWebDriver.Instance.Navigate().Back();
+                WebDriver.NavigateBack();
             }
             
-            SeleniumWebDriver.Instance.NavigateBackToOverview();
+            WebDriver.NavigateBackToOverview();
         }
 
         var csvWriter = new CsvWriter(ExportFieldNames, Headers, _exportRows);
         csvWriter.SaveAsCsv(fileStream);
         
-        SeleniumWebDriver.Instance.NavigateBackToMenu();
-        return Task.CompletedTask;
+        WebDriver.NavigateBackToMenu();
     }
 
     protected abstract void NavigateToAccount();
@@ -71,7 +71,7 @@ public abstract class AccountExport
     private int GetRowsCount()
     {
         Thread.Sleep(2000);
-        var rowsCount = SeleniumWebDriver.Instance.FindElements(By.TagName("tr")).Skip(2).ToList().Count;
+        var rowsCount = WebDriver.FindElements(By.TagName("tr")).Skip(2).ToList().Count;
         RowsCountChanged?.Invoke(this, new RowsCountChangedEventArgs(rowsCount));
         return rowsCount;
     }
@@ -94,10 +94,10 @@ public abstract class AccountExport
     private void ExportForm()
     {
         var reachedBankAccountTable = false;
-        var table = SeleniumWebDriver.Instance.FindElement(By.TagName("table"));
+        var table = WebDriver.FindElement(By.TagName("table"));
         var rows = table.FindElements(By.TagName("tr"));
 
-        SeleniumWebDriver.Instance.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(0);
+        WebDriver.SetTimeout(TimeSpan.FromSeconds(0));
 
         foreach (var row in rows)
         {

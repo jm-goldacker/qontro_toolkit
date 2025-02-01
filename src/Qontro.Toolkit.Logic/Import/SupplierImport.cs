@@ -3,11 +3,11 @@ using Qontro.Toolkit.Logic.WebDriver;
 
 namespace Qontro.Toolkit.Logic.Import;
 
-public class SupplierImport : AccountImport
+public class SupplierImport(ISeleniumWebDriver webDriver) : AccountImport(webDriver), ISupplierImport
 {
     protected override void NavigateToEnquiry()
     {
-        SeleniumWebDriver.Instance.NavigateToSupplierEnquiry();
+        WebDriver.NavigateToSupplierEnquiry();
     }
 
     protected override int GetCsvFieldOffset()
@@ -17,16 +17,16 @@ public class SupplierImport : AccountImport
 
     protected override void EnterCode(string code)
     {
-        SeleniumWebDriver.Instance.EnterSupplierCode(code);
+        WebDriver.EnterSupplierCode(code);
     }
 
     protected override void ClickMaintainButton()
     {
-        SeleniumWebDriver.Instance.ClickMaintainSupplierButton();
+        WebDriver.ClickMaintainSupplierButton();
     }
 
     protected override void ClickMainMenuButton()
     {
-        SeleniumWebDriver.Instance.FindElement(By.Id("menu-stock-home")).Click();
+        WebDriver.FindElement(By.Id("menu-stock-home")).Click();
     }
 }

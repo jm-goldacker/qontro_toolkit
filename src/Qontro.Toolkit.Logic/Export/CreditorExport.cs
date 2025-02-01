@@ -4,11 +4,11 @@ using Qontro.Toolkit.Logic.WebDriver;
 
 namespace Qontro.Toolkit.Logic.Export;
 
-public class CreditorExport : AccountExport
+public class CreditorExport(ISeleniumWebDriver webDriver) : AccountExport(webDriver), ICreditorExport
 {
     protected override void NavigateToAccount()
     {
-        SeleniumWebDriver.Instance.NavigateToCreditorEnquiry();
+        WebDriver.NavigateToCreditorEnquiry();
     }
 
     protected override void InitExportFields()
@@ -32,13 +32,13 @@ public class CreditorExport : AccountExport
         Headers.Add("Date And Time");
         Headers.Add("User");
         
-        var changesButton = SeleniumWebDriver.Instance.FindElement(By.Name("Show_Changes"));
+        var changesButton = WebDriver.FindElement(By.Name("Show_Changes"));
         var isChangesButtonActive = changesButton.Enabled;
         changesButton.Click();
 
         if (isChangesButtonActive)
         {
-            var changesTable = SeleniumWebDriver.Instance.FindElements(By.TagName("table"))[1];
+            var changesTable = WebDriver.FindElements(By.TagName("table"))[1];
             var changesRow = changesTable.FindElements(By.TagName("tr"));
 
             var lastUpdate = changesRow[^2];

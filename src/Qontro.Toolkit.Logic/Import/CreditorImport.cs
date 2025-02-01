@@ -3,11 +3,11 @@ using Qontro.Toolkit.Logic.WebDriver;
 
 namespace Qontro.Toolkit.Logic.Import;
 
-public class CreditorImport : AccountImport
+public class CreditorImport(ISeleniumWebDriver webDriver) : AccountImport(webDriver), ICreditorImport
 {
     protected override void NavigateToEnquiry()
     {
-        SeleniumWebDriver.Instance.NavigateToCreditorEnquiry();
+        WebDriver.NavigateToCreditorEnquiry();
     }
 
     protected override int GetCsvFieldOffset()
@@ -17,16 +17,16 @@ public class CreditorImport : AccountImport
 
     protected override void EnterCode(string code)
     {
-        SeleniumWebDriver.Instance.EnterCreditorCode(code);
+        WebDriver.EnterCreditorCode(code);
     }
 
     protected override void ClickMaintainButton()
     {
-        SeleniumWebDriver.Instance.ClickMaintainCreditorButton();
+        WebDriver.ClickMaintainCreditorButton();
     }
 
     protected override void ClickMainMenuButton()
     {
-        SeleniumWebDriver.Instance.FindElement(By.Id("menu-creditor-home")).Click();
+        WebDriver.FindElement(By.Id("menu-creditor-home")).Click();
     }
 }

@@ -5,9 +5,11 @@ using Qontro.Toolkit.Logic.WebDriver;
 
 namespace Qontro.Toolkit.Logic.Import;
 
-public abstract class AccountImport
+public abstract class AccountImport(ISeleniumWebDriver webDriver) : IAccountImport
 {
-    public Task Import(string filePath)
+    protected readonly ISeleniumWebDriver WebDriver = webDriver;
+
+    public void Import(string filePath)
     {
         var csvReader = new CsvReader(filePath);
         var fieldNames = csvReader.FieldNames.ToList();
@@ -22,13 +24,11 @@ public abstract class AccountImport
             ClearAndSearchAccount(creditorCode);
             ClickMaintainButton();
             Import(fieldValues, fieldNames);
-            SeleniumWebDriver.Instance.ClickSaveButton();
-            SeleniumWebDriver.Instance.Navigate().Back();
-            SeleniumWebDriver.Instance.Navigate().Back();
+            WebDriver.ClickSaveButton();
+            WebDriver.NavigateBackToOverview();
         }
 
         ClickMainMenuButton();
-        return Task.CompletedTask;
     }
     
     protected abstract int GetCsvFieldOffset();
@@ -37,9 +37,9 @@ public abstract class AccountImport
     
     private void ClearAndSearchAccount(string code)
     {
-        SeleniumWebDriver.Instance.ClearSearch();
+        WebDriver.ClearSearch();
         EnterCode(code);
-        SeleniumWebDriver.Instance.StartSearch();
+        WebDriver.StartSearch();
     }
     
     protected abstract void EnterCode(string code);
@@ -57,7 +57,7 @@ public abstract class AccountImport
             IWebElement? element;
             try
             {
-                element = SeleniumWebDriver.Instance.FindElement(By.Name(fieldNames[i]));
+                element = WebDriver.FindElement(By.Name(fieldNames[i]));
             }
             catch (NoSuchElementException)
             {
@@ -96,7 +96,7 @@ public abstract class AccountImport
                 element.SendKeys(value);
                 break;
             case "input" when element.GetAttribute("type") == "radio":
-                var radioButton = SeleniumWebDriver.Instance.FindElements(By.Name(fieldName))
+                var radioButton = WebDriver.FindElements(By.Name(fieldName))
                     .FirstOrDefault(b => b.GetAttribute("value") == value);
                 radioButton?.Click();
                 break;

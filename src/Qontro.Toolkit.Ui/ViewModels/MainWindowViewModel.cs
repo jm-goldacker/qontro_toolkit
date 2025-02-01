@@ -10,6 +10,22 @@ namespace Qontro.Toolkit.Ui.ViewModels;
 // ReSharper disable once PartialTypeWithSinglePart
 public partial class MainWindowViewModel : ViewModelBase
 {
+    private readonly ISeleniumWebDriver _seleniumWebDriver;
+    private readonly ICreditorExport _creditorExport;
+    private readonly ISupplierExport _supplierExport;
+    private readonly ICreditorImport _creditorImport;
+    private readonly ISupplierImport _supplierImport;
+
+    public MainWindowViewModel(ISeleniumWebDriver seleniumWebDriver, ICreditorExport creditorExport,
+        ISupplierExport supplierExport, ICreditorImport creditorImport, ISupplierImport supplierImport)
+    {
+        _seleniumWebDriver = seleniumWebDriver;
+        _creditorExport = creditorExport;
+        _supplierExport = supplierExport;
+        _creditorImport = creditorImport;
+        _supplierImport = supplierImport;
+    }
+    
     public string Url
     {
         get => _url;
@@ -156,7 +172,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (string.IsNullOrEmpty(Url) || string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password)) return;
         var isSuccessful = false;
-        await SeleniumWebDriver.Instance.Login(Url, User, Password);
+        await Task.Run(() => _seleniumWebDriver.Login(Url, User, Password));
         IsLoginNeeded = !isSuccessful;
     }
 
@@ -164,8 +180,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (ExportFileStream != null)
         {
-            var creditorExport = new CreditorExport();
-            await RunExport(creditorExport);
+            await RunExport(_creditorExport);
         }
     }
 
@@ -173,16 +188,15 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (ExportFileStream != null)
         {
-            var supplierExport = new SupplierExport();
-            await RunExport(supplierExport);
+            await RunExport(_supplierExport);
         }
     }
     
-    private async Task RunExport(AccountExport creditorExport)
+    private async Task RunExport(IAccountExport creditorExport)
     {
         creditorExport.RowsCountChanged += OnCreditorExportOnRowsCountChanged;
         creditorExport.CurrentProcessingItemChanged += OnCreditorExportOnCurrentProcessingItemChanged;
-        await creditorExport.Export(ExportFileStream!);
+        await Task.Run(() => creditorExport.Export(ExportFileStream!));
         creditorExport.RowsCountChanged -= OnCreditorExportOnRowsCountChanged;
         creditorExport.CurrentProcessingItemChanged -= OnCreditorExportOnCurrentProcessingItemChanged;
     }
@@ -191,8 +205,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (ImportFilePath != null)
         {
-            var creditorImport = new CreditorImport();
-            await creditorImport.Import(ImportFilePath);
+            await Task.Run(() => _creditorImport.Import(ImportFilePath));
         }
     }
 
@@ -200,8 +213,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (ImportFilePath != null)
         {
-            var supplierImport = new SupplierImport();
-            await supplierImport.Import(ImportFilePath);
+            await Task.Run(() => _supplierImport.Import(ImportFilePath));
         }
     }
 
