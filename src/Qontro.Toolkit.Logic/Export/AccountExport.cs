@@ -17,7 +17,7 @@ public abstract class AccountExport
     public event EventHandler<RowsCountChangedEventArgs>? RowsCountChanged;
     public event EventHandler<CurrentProcessingItemChangedEventArgs>? CurrentProcessingItemChanged;
 
-    public void Export(Stream fileStream)
+    public Task Export(Stream fileStream)
     {
         NavigateToAccount();
         SeleniumWebDriver.Instance.ClearSearch();
@@ -60,6 +60,7 @@ public abstract class AccountExport
         csvWriter.SaveAsCsv(fileStream);
         
         SeleniumWebDriver.Instance.NavigateBackToMenu();
+        return Task.CompletedTask;
     }
 
     protected abstract void NavigateToAccount();

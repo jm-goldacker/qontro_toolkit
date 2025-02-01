@@ -1,10 +1,11 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace Qontro.Toolkit.Logic.WebDriver;
 
 public static class WebDriverExtension
 {
-    public static bool Login(this IWebDriver webDriver, string url, string username, string password)
+    public static Task Login(this IWebDriver webDriver, string url, string username, string password)
     {
         webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
         webDriver.Navigate().GoToUrl(url);
@@ -15,19 +16,9 @@ public static class WebDriverExtension
         passField.SendKeys(password);
         submitButton.Click();
 
-        try
-        {
-            if (webDriver.FindElement(By.Id("MAIN")) != null)
-            {
-                return true;
-            }
-        }
-        catch (NoSuchElementException)
-        {
-            return false;
-        }
-
-        return true;
+        WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(5));
+        var success = wait.Until(d => d.Url.Contains("eAccounts_Main.asp"));
+        return Task.FromResult(success);
     }
     
     public static void NavigateToCreditorEnquiry(this IWebDriver webDriver)

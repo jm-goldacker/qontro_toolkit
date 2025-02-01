@@ -156,7 +156,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (string.IsNullOrEmpty(Url) || string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password)) return;
         var isSuccessful = false;
-        await Task.Run(() => isSuccessful = SeleniumWebDriver.Instance.Login(Url, User, Password));
+        await SeleniumWebDriver.Instance.Login(Url, User, Password);
         IsLoginNeeded = !isSuccessful;
     }
 
@@ -182,7 +182,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         creditorExport.RowsCountChanged += OnCreditorExportOnRowsCountChanged;
         creditorExport.CurrentProcessingItemChanged += OnCreditorExportOnCurrentProcessingItemChanged;
-        await Task.Run(() => creditorExport.Export(ExportFileStream!));
+        await creditorExport.Export(ExportFileStream!);
         creditorExport.RowsCountChanged -= OnCreditorExportOnRowsCountChanged;
         creditorExport.CurrentProcessingItemChanged -= OnCreditorExportOnCurrentProcessingItemChanged;
     }
@@ -192,7 +192,7 @@ public partial class MainWindowViewModel : ViewModelBase
         if (ImportFilePath != null)
         {
             var creditorImport = new CreditorImport();
-            await Task.Run(() => creditorImport.Import(ImportFilePath));
+            await creditorImport.Import(ImportFilePath);
         }
     }
 
@@ -201,7 +201,7 @@ public partial class MainWindowViewModel : ViewModelBase
         if (ImportFilePath != null)
         {
             var supplierImport = new SupplierImport();
-            await Task.Run(() => supplierImport.Import(ImportFilePath));
+            await supplierImport.Import(ImportFilePath);
         }
     }
 

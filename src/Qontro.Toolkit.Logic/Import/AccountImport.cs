@@ -7,7 +7,7 @@ namespace Qontro.Toolkit.Logic.Import;
 
 public abstract class AccountImport
 {
-    public void Import(string filePath)
+    public Task Import(string filePath)
     {
         var csvReader = new CsvReader(filePath);
         var fieldNames = csvReader.FieldNames.ToList();
@@ -28,6 +28,7 @@ public abstract class AccountImport
         }
 
         ClickMainMenuButton();
+        return Task.CompletedTask;
     }
     
     protected abstract int GetCsvFieldOffset();
