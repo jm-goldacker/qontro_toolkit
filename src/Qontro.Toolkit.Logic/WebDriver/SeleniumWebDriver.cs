@@ -30,8 +30,15 @@ public class SeleniumWebDriver : ISeleniumWebDriver
         submitButton.Click();
 
         WebDriverWait wait = new WebDriverWait(_webDriver, TimeSpan.FromSeconds(5));
-        var success = wait.Until(d => d.Url.Contains("eAccounts_Main.asp"));
-        return success;
+        try
+        {
+            var success = wait.Until(d => d.Url.Contains("eAccounts_Main.asp"));
+            return success;
+        }
+        catch (WebDriverTimeoutException wdtExc)
+        {
+            return false;
+        }
     }
     
     public void NavigateToCreditorEnquiry()

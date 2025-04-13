@@ -84,7 +84,7 @@ public partial class MainWindowViewModel : ViewModelBase
             _isLoginNeeded = value;
             OnPropertyChanged();
 
-            if (IsLoginNeeded && ExportFileStream != null)
+            if (!IsLoginNeeded && ExportFileStream != null)
             {
                 IsExportPossible = true;
             }
