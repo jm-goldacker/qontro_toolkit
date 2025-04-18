@@ -5,9 +5,9 @@ public class CsvWriter(
     IEnumerable<string> headers,
     IEnumerable<IEnumerable<string>> exportRows)
 {
-    public void SaveAsCsv(Stream fileStream)
+    public void SaveAsCsv(string filePath)
     {
-        using var fw = new StreamWriter(fileStream);
+        using var fw = new StreamWriter(filePath);
         
         fw.WriteLine(string.Join(';', exportFieldNames));
         fw.WriteLine(string.Join(';', headers));

@@ -35,7 +35,7 @@ public class SeleniumWebDriver : ISeleniumWebDriver
             var success = wait.Until(d => d.Url.Contains("eAccounts_Main.asp"));
             return success;
         }
-        catch (WebDriverTimeoutException wdtExc)
+        catch (WebDriverTimeoutException)
         {
             return false;
         }

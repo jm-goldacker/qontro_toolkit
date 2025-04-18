@@ -6,5 +6,5 @@ public interface IAccountExport
 {
     public event EventHandler<RowsCountChangedEventArgs>? RowsCountChanged;
     public event EventHandler<CurrentProcessingItemChangedEventArgs>? CurrentProcessingItemChanged;
-    public void Export(Stream fileStream);
+    public void Export(string filePath);
 }
