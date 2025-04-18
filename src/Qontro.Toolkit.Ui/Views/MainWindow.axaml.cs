@@ -41,13 +41,10 @@ public partial class MainWindow : Window
 
             if (file == null)
             {
-                viewModel.ExportFileStream = null;
-                viewModel.ExportFilePath = null;
                 return;
             }
 
             var stream = await file.OpenWriteAsync();
-            viewModel.ExportFileStream = stream;
             viewModel.ExportFilePath = file.Path.AbsolutePath;
         }
         catch (Exception)
@@ -80,6 +77,11 @@ public partial class MainWindow : Window
                     CustomFilePickerTypes.Csv
                 ]
             });
+
+            if (!storageFiles.Any())
+            {
+                return;
+            }
 
             var file = storageFiles.First();
             viewModel.ImportFilePath = file.Path.AbsolutePath;

@@ -16,6 +16,8 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ICreditorImport _creditorImport;
     private readonly ISupplierImport _supplierImport;
 
+    private const string NO_FILE_SELECTED_STRING = "no file selected";
+
     public MainWindowViewModel(ISeleniumWebDriver seleniumWebDriver, ICreditorExport creditorExport,
         ISupplierExport supplierExport, ICreditorImport creditorImport, ISupplierImport supplierImport)
     {
@@ -84,64 +86,49 @@ public partial class MainWindowViewModel : ViewModelBase
             _isLoginNeeded = value;
             OnPropertyChanged();
 
-            if (!IsLoginNeeded && ExportFileStream != null)
+            if (IsLoginNeeded)
+            {
+                IsExportPossible = false;
+                IsImportPossible = false;
+                return;
+            }
+
+            if (_exportFilePath != null)
             {
                 IsExportPossible = true;
             }
-        }
-    }
-    
-    public Stream? ExportFileStream
-    {
-        get => _exportFileStream;
-        set
-        {
-            _exportFileStream?.Dispose();
-            _exportFileStream = value;
-            OnPropertyChanged();
 
-            if (ExportFileStream != null && !IsLoginNeeded)
-            {
-                IsExportPossible = true;
-            }
-        }
-    }
-    
-    public Stream? ImportFileStream
-    {
-        get => _importFileStream;
-        set
-        {
-            _importFileStream?.Dispose();
-            _importFileStream = value;
-            OnPropertyChanged();
-
-            if (ImportFileStream != null && !IsLoginNeeded)
+            if (_importFilePath != null)
             {
                 IsImportPossible = true;
             }
         }
     }
     
-    public string? ExportFilePath
+    public string ExportFilePath
     {
-        get => _exportFilePath;
+        get => _exportFilePath ?? NO_FILE_SELECTED_STRING;
         set
         {
-            _exportFilePath = value ?? "no file selected";
+            _exportFilePath = value;
             OnPropertyChanged();
+
+            if (_exportFilePath != null && !IsLoginNeeded)
+            {
+                IsExportPossible = true;
+            }
         }
     }
     
-    public string? ImportFilePath
+    public string ImportFilePath
     {
-        get => _importFilePath;
+        get => _importFilePath ?? NO_FILE_SELECTED_STRING;
         set
         {
-            _importFilePath = value ?? "no file selected";
+            _importFilePath = value;
             OnPropertyChanged();
             
-            if (ImportFilePath != null && !IsLoginNeeded)
+            if (_importFilePath != null && !IsLoginNeeded)
             {
                 IsImportPossible = true;
             }
@@ -172,13 +159,13 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (string.IsNullOrEmpty(Url) || string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password)) return;
         var isSuccessful = false;
-        await Task.Run(() => _seleniumWebDriver.Login(Url, User, Password));
+        await Task.Run(() => isSuccessful = _seleniumWebDriver.Login(Url, User, Password));
         IsLoginNeeded = !isSuccessful;
     }
 
     public async Task ExportCreditors()
     {
-        if (ExportFileStream != null)
+        if (_exportFilePath != null)
         {
             await RunExport(_creditorExport);
         }
@@ -186,7 +173,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public async Task ExportSuppliers()
     {
-        if (ExportFileStream != null)
+        if (_exportFilePath != null)
         {
             await RunExport(_supplierExport);
         }
@@ -196,24 +183,24 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         creditorExport.RowsCountChanged += OnCreditorExportOnRowsCountChanged;
         creditorExport.CurrentProcessingItemChanged += OnCreditorExportOnCurrentProcessingItemChanged;
-        await Task.Run(() => creditorExport.Export(ExportFileStream!));
+        await Task.Run(() => creditorExport.Export(ExportFilePath!));
         creditorExport.RowsCountChanged -= OnCreditorExportOnRowsCountChanged;
         creditorExport.CurrentProcessingItemChanged -= OnCreditorExportOnCurrentProcessingItemChanged;
     }
 
     public async Task ImportCreditors()
     {
-        if (ImportFilePath != null)
+        if (_importFilePath != null)
         {
-            await Task.Run(() => _creditorImport.Import(ImportFilePath));
+            await Task.Run(() => _creditorImport.Import(_importFilePath));
         }
     }
 
     public async Task ImportSuppliers()
     {
-        if (ImportFilePath != null)
+        if (_importFilePath != null)
         {
-            await Task.Run(() => _supplierImport.Import(ImportFilePath));
+            await Task.Run(() => _supplierImport.Import(_importFilePath));
         }
     }
 
@@ -224,10 +211,8 @@ public partial class MainWindowViewModel : ViewModelBase
     private int _progressMaximum;
 
     private bool _isLoginNeeded = true;
-    private Stream? _exportFileStream;
-    private Stream? _importFileStream;
-    private string? _exportFilePath = "no file selected";
-    private string? _importFilePath = "no file selected";
+    private string? _exportFilePath = null;
+    private string? _importFilePath = null;
     private bool _isExportPossible;
     private bool _isImportPossible;
     

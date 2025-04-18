@@ -18,7 +18,7 @@ public abstract class AccountExport(ISeleniumWebDriver webDriver) : IAccountExpo
     public event EventHandler<RowsCountChangedEventArgs>? RowsCountChanged;
     public event EventHandler<CurrentProcessingItemChangedEventArgs>? CurrentProcessingItemChanged;
 
-    public void Export(Stream fileStream)
+    public void Export(string filePath)
     {
         NavigateToAccount();
         WebDriver.ClearSearch();
@@ -58,7 +58,7 @@ public abstract class AccountExport(ISeleniumWebDriver webDriver) : IAccountExpo
         }
 
         var csvWriter = new CsvWriter(ExportFieldNames, Headers, _exportRows);
-        csvWriter.SaveAsCsv(fileStream);
+        csvWriter.SaveAsCsv(filePath);
         
         WebDriver.NavigateBackToMenu();
     }
