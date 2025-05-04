@@ -42,7 +42,7 @@ public abstract class AccountExport(ISeleniumWebDriver webDriver) : IAccountExpo
             var isChangesButtonActive = ExportLastUpdated();
             ExportLink(creditorLinkHref);
 
-            WebDriver.ClickMaintainSupplierButton();
+            ClickMaintainButton();
 
             ExportForm();
             WebDriver.SetTimeout(TimeSpan.FromSeconds(30));
@@ -67,6 +67,7 @@ public abstract class AccountExport(ISeleniumWebDriver webDriver) : IAccountExpo
     protected abstract void InitExportFields();
     protected abstract void ExportMetadata(ReadOnlyCollection<IWebElement> columns);
     protected abstract bool ExportLastUpdated();
+    protected abstract void ClickMaintainButton();
 
     private int GetRowsCount()
     {

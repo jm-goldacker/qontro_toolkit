@@ -16,15 +16,15 @@ Download the current release for your operating system and your PC's architectur
 
 ## Usage
 
-1. **Prepare Your CSV Files**: Ensure your CSV files are formatted correctly for import.
+1. **Prepare Your CSV Files**: Ensure your CSV files are formatted correctly for import. Replace semicolons with `#0#` and commas with `#1#`.
 
 2. **Enter the url of Qontro**
 
 3. **Enter your login credentials for Qontro** and press the login button.
 
-5. **Specify the import or export file** using the corresponding button.
+4. **Specify the import or export file** using the corresponding button.
 
-6. **Click the import or export button** for suppliers or creditors. 
+5. **Click the import or export button** for suppliers or creditors.
 
 ## Contributing
 

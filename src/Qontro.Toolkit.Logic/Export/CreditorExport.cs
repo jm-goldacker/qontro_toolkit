@@ -55,4 +55,9 @@ public class CreditorExport(ISeleniumWebDriver webDriver) : AccountExport(webDri
 
         return isChangesButtonActive;
     }
+    
+    protected override void ClickMaintainButton()
+    {
+        WebDriver.ClickMaintainCreditorButton();
+    }
 }

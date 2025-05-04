@@ -28,4 +28,9 @@ public class SupplierExport(ISeleniumWebDriver webDriver) : AccountExport(webDri
     {
         return false;
     }
+    
+    protected override void ClickMaintainButton()
+    {
+        WebDriver.ClickMaintainSupplierButton();
+    }
 }
